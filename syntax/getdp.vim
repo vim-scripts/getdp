@@ -1,36 +1,18 @@
 " Vim syntax file
 " Language: GetDP
-" Modificado: Patricio Toledo <patoledo@ing.uchile.cl>
-" Last Change: mar may 6 21:39:46 CLT 2003
+" Author: Patricio Toledo <patoledo@ing.uchile.cl>
+" Last Change: dom may 11 18:01:00 CLT 2003
 
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
 if version < 600
- syntax clear
+  syntax clear
 elseif exists("b:current_syntax")
- finish
+  finish
 endif
 
-"Mismatcher
-syn region getdpMatch matchgroup=Identifier start="(" end=")" contains=ALL fold 
-syn region getdpMatch matchgroup=Identifier start="{" end="}" contains=ALL fold
-syn region getdpMatch matchgroup=Identifier start="\[" end="]" contains=ALL fold
-syn region getdpString start=+"+ end=+"+ oneline
-
-syn match getdpArgument "\$\(\d\|\w\)\+"
-syn match getdpArithmeticOperator "[-+%]"
-syn match getdpArithmeticOperator "[\/\|\*]"
-syn match getdpColons "[,;:]"
-syn match getdpComment "//.*$"
-syn match getdpError "[}\])]" 
-syn match getdpLogicalOperator "[||]"
-syn match getdpLogicalOperator "[&&]"
-syn match getdpNumber "\<\d\+\(\.\d*\)\=\([edED][-+]\=\d\+\)\=[ij]\=\>"
-syn match getdpNumber "\.\d\+\([edED][-+]\=\d\+\)\=[ij]\=\>"
-syn match getdpNumber "\<\d\+[ij]\=\>"
-syn match getdpRegister "\#\d"
-syn match getdpRelationalOperator "[<>]=\="
-syn match getdpRelationalOperator "[!]="
+syn sync maxlines=200
+syn sync minlines=40
 
 syn keyword getdpBasisFunction BF_CurlGroupOfPerpendicularEdge
 syn keyword getdpBasisFunction BF_dGlobal BF_NodeX BF_NodeY BF_NodeZ
@@ -46,8 +28,6 @@ syn keyword getdpBasisFunction BF_RegionX BF_RegionY BF_RegionZ BF_Global
 syn keyword getdpBasisFunction BF_Zero BF_One AliasOf AssociatedWith
 syn keyword getdpConstraint Assign Init AssignFromResolution
 syn keyword getdpConstraint InitFromResolution Network Link LinkCplx 
-syn keyword getdpCurrent $DTime $integer $Iteration $Theta $Time 
-syn keyword getdpCurrent $TimeStep $X $XS $Y $YS $Z $ZS $A $B $C
 syn keyword getdpDefine DefineConstant DefineGroup DefineFunction
 syn keyword getdpElement Line Triangle Quadrangle Tetrahedron Hexahedron
 syn keyword getdpElement Prism Pyramid Point
@@ -85,8 +65,8 @@ syn keyword getdpMiscFunction Printf Normal NormalSource
 syn keyword getdpName BasisFunction Entity Quantity Equation Operation
 syn keyword getdpName NameOfCoef NameOfConstraint NameOfFormulation
 syn keyword getdpName NameOfMesh NameOfPostProcessing NameOfSpace 
-syn keyword getdpName Name Type Case NameOfResolution NameOfBasisFunction
 syn keyword getdpName NameOfSystem System 
+syn keyword getdpName Name Type Case NameOfResolution NameOfBasisFunction
 syn keyword getdpObject Group Function Constraint FunctionSpace
 syn keyword getdpObject Jacobian Integration Formulation Resolution
 syn keyword getdpObject PostProcessing PostOperation
@@ -107,53 +87,72 @@ syn keyword getdpResolution SystemCommand If Else Print Lanczos
 syn keyword getdpResolution TransferInitSolution SetTime SetFrequency
 syn keyword getdpSpec Not All
 
+syn match getdpArgument "\$\(\d\|\w\)\+"
+syn match getdpArithmeticOperator "[-+%]" contained
+syn match getdpArithmeticOperator "[\/\|\*]" contained
+syn match getdpColons "[,;:]"
+syn match getdpError "[}\])]" 
+syn match getdpInclude "#include\s\+"
+syn match getdpLogicalOperator "[||\|&&]"
+syn match getdpLogicalOperator "[!]="
+syn match getdpNumber "\<\d\+\(\.\d*\)\=\([edED][-+]\=\d\+\)\=[ij]\=\>"
+syn match getdpNumber "\.\d\+\([edED][-+]\=\d\+\)\=[ij]\=\>"
+syn match getdpNumber "\<\d\+[ij]\=\>"
+syn match getdpRegister "\#\d"
+syn match getdpRelationalOperator "[<>]=\="
+
+syn region getdpComment matchgroup=Comment start="\/\*" end="\*\/" contains=getdpString,getdpNumber
+syn region getdpComment start="//" end="$"
+syn region getdpMatch matchgroup=Identifier start="(" end=")" contains=ALL fold 
+syn region getdpMatch matchgroup=Identifier start="{" end="}" contains=ALL fold
+syn region getdpMatch matchgroup=Identifier start="\[" end="]" contains=ALL fold
+syn region getdpString start=+"+ end=+"+ oneline
+
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
-if version >= 508 || !exists("did_getdp_syntax_inits")
- if version < 508
- let did_getdp_syntax_inits = 1
- command -nargs=+ HiLink hi link <args>
- else
- command -nargs=+ HiLink hi def link <args>
- endif
 
- HiLink getdpArgument String
- HiLink getdpArithmeticOperator Operator
- HiLink getdpBasisFunction Type
- HiLink getdpColon Special
- HiLink getdpComment Comment
- HiLink getdpConstant Operator
- HiLink getdpConstraint Type
- HiLink getdpCurrent String
- HiLink getdpDefine Type
- HiLink getdpElement Type
- HiLink getdpError Error
- HiLink getdpFormulation Type
- HiLink getdpFunction Function
- HiLink getdpFunctionSpace Type
- HiLink getdpGreen Type
- HiLink getdpGroup Type
- HiLink getdpInclude Include 
- HiLink getdpIntegration Type
- HiLink getdpJacobian Type
- HiLink getdpLogicalOperator Operator
- HiLink getdpMath Function
- HiLink getdpMathFunction Function
- HiLink getdpMiscFunction Function
- HiLink getdpName Operator
- HiLink getdpNumber Number
- HiLink getdpObject TODO
- HiLink getdpPostOperation Type
- HiLink getdpPostProcessing Type
- HiLink getdpRegister String
- HiLink getdpRelationalOperator Operator
- HiLink getdpRepeat Repeat
- HiLink getdpResolution Type
- HiLink getdpSpec Underlined
- HiLink getdpString String
- 
- delcommand HiLink
+if version >= 508 || !exists("did_getdp_syntax_inits")
+   if version < 508
+     let did_getdp_syntax_inits = 1
+     command -nargs=+ HiLink hi link <args>
+   else
+     command -nargs=+ HiLink hi def link <args>
+   endif
+   HiLink getdpArgument String
+   HiLink getdpArithmeticOperator Operator
+   HiLink getdpBasisFunction Type
+   HiLink getdpColons Special
+   HiLink getdpComment Comment
+   HiLink getdpConstant Operator
+   HiLink getdpConstraint Type
+   HiLink getdpDefine Type
+   HiLink getdpElement Type
+   HiLink getdpError Error
+   HiLink getdpFormulation Type
+   HiLink getdpFunction Function
+   HiLink getdpFunctionSpace Type
+   HiLink getdpGreen Type
+   HiLink getdpGroup Type
+   HiLink getdpInclude Include 
+   HiLink getdpIntegration Type
+   HiLink getdpJacobian Type
+   HiLink getdpLogicalOperator Operator
+   HiLink getdpMath Function
+   HiLink getdpMathFunction Function
+   HiLink getdpMiscFunction Function
+   HiLink getdpName Operator
+   HiLink getdpNumber Number
+   HiLink getdpObject SpecialKey
+   HiLink getdpPostOperation Type
+   HiLink getdpPostProcessing Type
+   HiLink getdpRegister String
+   HiLink getdpRelationalOperator Operator
+   HiLink getdpRepeat Repeat
+   HiLink getdpResolution Type
+   HiLink getdpSpec Underlined
+   HiLink getdpString String
+   delcommand HiLink
 endif
 
 let b:current_syntax = "getdp"
